@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/dev/go/Dockerfile
+    restart: always
+    volumes:
+      - ./tmp:/mnt/data:rw
+      - ./:/go/src/api.premiumcases.design
+    ports:
+      - "1234:1234"
+    env_file:
+      - .env
+
+  imaginary:
+    image: h2non/imaginary:1.2.2
+    restart: always
+    volumes:
+      - ./tmp:/mnt/data:rw
+    command: -concurrency 50 -cors -mount /mnt/data -path-prefix /images
+    ports:
+      - "9000:9000"

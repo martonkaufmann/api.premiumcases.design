@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/url"
 	"os"
 
 	"api.premiumcases.design/api"
@@ -15,7 +16,9 @@ func main() {
 	bugsnag.Configure(bugsnag.Configuration{
 		APIKey: os.Getenv("BUGSNAG_API_KEY"),
 		// The import paths for the Go packages containing your source files
-		ProjectPackages: []string{os.Getenv("BUGSNAG_PROJECT")},
+		ProjectPackages:     []string{os.Getenv("BUGSNAG_PROJECT")},
+		NotifyReleaseStages: []string{"production"},
+		ReleaseStage:        os.Getenv("ENV"),
 	})
 
 	// Echo instance
@@ -25,10 +28,25 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
+	// Validator
 	e.Validator = &requestvalidator.RequestValidator{Validator: validator.New()}
 
 	// Routes
 	api.RegisterRoutes(e.Group("api"))
+
+	url, err := url.Parse(os.Getenv("IMAGINARY_HOST"))
+	if err != nil {
+		e.Logger.Fatal(err)
+	}
+
+	targets := []*middleware.ProxyTarget{
+		{
+			URL: url,
+		},
+	}
+
+	imagesGroup := e.Group("/images")
+	imagesGroup.Use(middleware.Proxy(middleware.NewRoundRobinBalancer(targets)))
 
 	// Start server
 	e.Logger.Fatal(e.Start(":" + os.Getenv("PORT")))

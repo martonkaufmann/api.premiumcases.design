@@ -95,7 +95,7 @@ func hasuraCaseFromPrintifyProduct(p printifyapi.Product) (*hasura.Case, error) 
 			if i.VariantIDs[0] == v.ID {
 				remoteURL := strings.Replace(i.RemoteURL, "-api", "", -1)
 
-				fn, err := utils.DownloadRemoteFile(os.Getenv("PRINTIFY_IMAGE_SAVE_PATH"), remoteURL)
+				fn, err := utils.DownloadRemoteFile(os.Getenv("IMAGE_PATH"), remoteURL)
 
 				if err != nil {
 					return nil, err

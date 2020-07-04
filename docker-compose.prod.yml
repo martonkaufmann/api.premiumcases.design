@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: docker/dev/prod/Dockerfile
+    restart: always
+    volumes:
+      - /mnt/data:/mnt/data:rw
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+
+  imaginary:
+    image: h2non/imaginary:1.2.2
+    restart: always
+    volumes:
+      - /mnt/data:/mnt/data:rw
+    command: -concurrency 50 -cors -mount /mnt/data -path-prefix /images

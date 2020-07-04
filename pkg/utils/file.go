@@ -9,8 +9,23 @@ import (
 	"path/filepath"
 )
 
+func FileExists(path string) bool {
+	info, err := os.Stat(path)
+
+	if os.IsNotExist(err) {
+		return false
+	}
+
+	return !info.IsDir()
+}
+
 func DownloadRemoteFile(path, url string) (string, error) {
 	fn := fmt.Sprintf("%x", md5.Sum([]byte(url)))
+
+	if FileExists(fn) {
+		return fn, nil
+	}
+
 	ext := filepath.Ext(url)
 	resp, err := http.Get(url)
 

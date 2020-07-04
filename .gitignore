@@ -14,4 +14,10 @@
 # Dependency directories (remove the comment below to include it)
 vendor/
 
-.vscode
+# Editor specific folders
+/.vscode
+
+# Application binary
+api.premiumcases.design
+
+.env
