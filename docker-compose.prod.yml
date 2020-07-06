@@ -4,7 +4,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: docker/dev/prod/Dockerfile
+      dockerfile: docker/prod/go/Dockerfile
     restart: always
     volumes:
       - /mnt/data:/mnt/data:rw
