@@ -37,7 +37,9 @@ func PrintifyProductPublish(ctx echo.Context) error {
 		return ctx.NoContent(http.StatusUnprocessableEntity)
 	}
 
-	p, err := printifyapi.GetProduct(strconv.Itoa(req.Resource.Data.ShopID), req.Resource.ID)
+	printifyShopID := strconv.Itoa(req.Resource.Data.ShopID)
+	printifyProductID := req.Resource.ID
+	p, err := printifyapi.GetProduct(printifyShopID, printifyProductID)
 
 	if err != nil {
 		bugsnag.Notify(err)
@@ -53,7 +55,17 @@ func PrintifyProductPublish(ctx echo.Context) error {
 		return ctx.NoContent(http.StatusInternalServerError)
 	}
 
-	if err := c.Save(); err != nil {
+	err = c.Save()
+
+	if err != nil {
+		bugsnag.Notify(err)
+
+		return ctx.NoContent(http.StatusInternalServerError)
+	}
+
+	err = printifyapi.ProductPublishSuccess(printifyShopID, printifyProductID)
+
+	if err != nil {
 		bugsnag.Notify(err)
 
 		return ctx.NoContent(http.StatusInternalServerError)

@@ -68,3 +68,29 @@ func GetProduct(shopID, productID string) (*Product, error) {
 
 	return p, nil
 }
+
+func ProductPublishSuccess(shopID, productID string) error {
+	c := new(http.Client)
+	req, err := http.NewRequest(
+		"POST",
+		fmt.Sprintf(
+			"https://api.printify.com/v1/shops/%s/products/%s/publishing_succeeded.json",
+			shopID,
+			productID,
+		),
+		nil,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	req.Header.Add(
+		"Authorization",
+		"Bearer "+os.Getenv("PRINTIFY_API_KEY"),
+	)
+
+	_, err = c.Do(req)
+
+	return err
+}
