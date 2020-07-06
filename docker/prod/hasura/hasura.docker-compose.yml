@@ -10,7 +10,7 @@ services:
       - .env.postgres
 
   hasura:
-    image: hasura/graphql-engine
+    image: hasura/graphql-engine:pull5070-1699dc79
     ports:
       - "80:8080"
     depends_on:
