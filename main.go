@@ -32,8 +32,9 @@ func main() {
 	e.Validator = &requestvalidator.RequestValidator{Validator: validator.New()}
 
 	// Routes
-	api.RegisterRoutes(e.Group("api"))
+	api.RegisterRoutes(e)
 
+	// Proxy imaginary requests
 	url, err := url.Parse(os.Getenv("IMAGINARY_HOST"))
 	if err != nil {
 		e.Logger.Fatal(err)
