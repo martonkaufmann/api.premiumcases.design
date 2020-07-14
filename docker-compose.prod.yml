@@ -18,4 +18,4 @@ services:
     restart: always
     volumes:
       - /mnt/data:/mnt/data:rw
-    command: -concurrency 50 -cors -mount /mnt/data -path-prefix /images
+    command: -concurrency 50 -cors -mount /mnt/data -path-prefix /images -http-cache-ttl 86400
